@@ -22,8 +22,7 @@
 
 import type { ProColumnType } from '@ant-design/pro-table';
 import { useMemo, useRef, useState } from 'react';
-import _ from 'lodash';
-import useRefState from '@/utils/hooks/useRefState';
+import useRefState from '../hooks/useRefState';
 
 export function _f_i_x_useDependenciesColumns(columns: any[]) {
   const map = useRef<Record<string, string[]>>({});
