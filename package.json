@@ -1,5 +1,5 @@
 {
-  "name": "schema-pro-component",
+  "name": "@bomon/schema-pro-component",
   "version": "1.0.0",
   "main": "src/index.tsx",
   "type": "module",
@@ -10,12 +10,15 @@
   ],
   "repository": "https://github.com/ranmeizi/schema-pro-component.git",
   "author": "boboan <360969885@qq.com>",
-  "license": "MIT",
+  "license": "ISC",
   "peerDependencies": {
     "@ant-design/pro-components": "^1.1.25",
-    "antd":"^4.24.13"
+    "antd": "^4.24.13"
   },
   "devDependencies": {
     "@types/react": "^18.3.3"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }
