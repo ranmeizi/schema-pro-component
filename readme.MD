@@ -35,7 +35,7 @@
 2. RemoteSchemaEditableProTable 组件(Components) , 给他们提供对应的 props 值
 
 ```tsx
-import {Provider,RemoteSchemaEditableProTable} from '@/component/SchemaComponent'
+import {Provider,RemoteSchemaEditableProTable} from '@bomon/schema-pro-component'
 import {Input} from 'antd'
 
 function request(url:string,method,params:any){
