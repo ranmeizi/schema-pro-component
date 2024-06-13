@@ -1,4 +1,4 @@
-import { useFieldRequest } from '@/components/SchemaComponent/utils/DefaultValueMaps';
+import { useFieldRequest } from '../../../utils/DefaultValueMaps';
 import type { SelectProps } from 'antd';
 import React, { useEffect } from 'react';
 
