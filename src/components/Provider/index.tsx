@@ -2,9 +2,8 @@ import logger from '../../utils/logger';
 import type { PropsWithChildren } from 'react';
 import React, { createContext, useContext, useMemo } from 'react';
 import type { ProRenderFieldPropsType } from '@ant-design/pro-provider';
-import { ConfigProvider } from '@ant-design/pro-provider';
+import { ProConfigProvider } from '@ant-design/pro-provider';
 import { DEFAULT_VALUE_MAPS } from '../../utils/DefaultValueMaps';
-import { useIntl } from '@ant-design/pro-components';
 
 const initValue: Dependencies = {
   /**
@@ -47,17 +46,13 @@ const Provider = ({ valueTypeMap = {}, children, request }: PropsWithChildren<De
     };
   }, [valueTypeMap]);
 
-  console.log('bibiprovider', maps);
-
-  const intl = useIntl();
-
   return (
     <SchemaComponentContext.Provider
       value={{
         request,
       }}
     >
-      <ConfigProvider value={{ intl, valueTypeMap: maps }}>{children}</ConfigProvider>
+      <ProConfigProvider valueTypeMap={maps}>{children}</ProConfigProvider>
     </SchemaComponentContext.Provider>
   );
 };
