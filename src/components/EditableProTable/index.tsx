@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
 import { EditableProTable } from '@ant-design/pro-table';
 import { Popconfirm } from 'antd';
-import React, { useEffect, useState } from 'react';
+import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import type { LoadingConfig } from '../../utils/withLoadingConfig';
 import withLoadingConfig from '../../utils/withLoadingConfig';
 import type { EditableProTableProps } from '@ant-design/pro-table/lib/components/EditableTable';
@@ -28,9 +28,14 @@ type SchemaEditableProTableProps = {
 } & LoadingConfig &
   RemoteSchemaEditableProTableConfig;
 
+export type SchemaEditableProTableRefType = {
+  /** 获取表格数据 */
+  getDataSource(): any[]
+}
+
 const PREFIX_ROWKEY = '__front_addnew__';
 
-function SchemaEditableProTable(props: SchemaEditableProTableProps) {
+function SchemaEditableProTable(props: SchemaEditableProTableProps, ref: any) {
   // 提取需要合并的公共参数
   const commonParams = useMergedParams({ vars: props.vars || {} }, props.mergedParams);
   // 请求函数
@@ -38,6 +43,12 @@ function SchemaEditableProTable(props: SchemaEditableProTableProps) {
 
   const [columns, setColumns] = useState<any[]>([]);
   const [value, setValue] = useState<any[]>([]);
+
+  useImperativeHandle<any, SchemaEditableProTableRefType>(ref, () => {
+    return {
+      getDataSource: () => value
+    }
+  })
 
   const rowKey = props.editableProTableProps.rowKey as string;
   const vars = props.vars;
@@ -122,7 +133,7 @@ function SchemaEditableProTable(props: SchemaEditableProTableProps) {
       tableClassName="schema-editable-protable"
       columns={fix_columns as any}
       value={value || []}
-      onChange={setValue}
+      onChange={setValue as any}
       editable={{
         type: 'single',
         async onSave(key, record) {
@@ -141,10 +152,10 @@ function SchemaEditableProTable(props: SchemaEditableProTableProps) {
       recordCreatorProps={
         props.actions.create
           ? {
-              // 每次新增的时候需要Key
-              record: () => ({ [rowKey]: PREFIX_ROWKEY + Date.now() }),
-              creatorButtonText: '新建',
-            }
+            // 每次新增的时候需要Key
+            record: () => ({ [rowKey]: PREFIX_ROWKEY + Date.now() }),
+            creatorButtonText: '新建',
+          }
           : false
       }
     />
@@ -152,6 +163,6 @@ function SchemaEditableProTable(props: SchemaEditableProTableProps) {
 }
 
 const RemoteSchemaEditableProTable =
-  withLoadingConfig<RemoteSchemaEditableProTableConfig>()(SchemaEditableProTable);
+  withLoadingConfig<RemoteSchemaEditableProTableConfig>()(forwardRef(SchemaEditableProTable));
 
 export { RemoteSchemaEditableProTable, SchemaEditableProTable };
