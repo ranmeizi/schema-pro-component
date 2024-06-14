@@ -71,8 +71,23 @@ Provider 用于给组件提供依赖项，例如组件内部使用的 request �
 
 使用 schema 作为 props 的组件，是 RemoteSchemaEditableProTable 的基础，一般不单独使用。因为即然用到前端写代码了，就不用遵循这套标准了，直接用 pro-components 的 EditableProTable 不是更灵活么。
 
+| 参数 | 说明 | 类型 | |
+| --- | --- | --- | --- |
+| editableProTableProps | 给pro-components EditableProTable 组件的props，只支持其中可序列化的部分。 Pro-Component 文档: [EditableProTable props](https://procomponents.ant.design/components/editable-table#editableprotable) \| [Columns](https://procomponents.ant.design/components/table#columns-%E5%88%97%E5%AE%9A%E4%B9%89) | {editableProTableProps:EditableProTableProps,actions:\{queryList:srting,create:string,updateById:string,deleteById:string\}} | 必须 |
+| actions | 对应请求地址 | - | 必须 |
+| vars | 外部参数，当vars发生改变时，将会刷新表格数据 | Record<string,any> | 可选 |
+| mergedParams | 一个数组，如果写了 vars 的key 值，该值将会在 request 时被携带 | string[] | 可选 |
+| overrideActions | 覆盖内部请求行为 | Partial<ActionFns> |
+
 #### RemoteSchemaEditableProTable
 
+| 参数 | 说明 | 类型 | |
+| --- | --- | --- | --- |
+| url | 用于请求 SchemaEditableProTable 的 editableProTableProps 和 actions 数据，初始化时会向[editableprotableconfig](#1editableprotableconfigget) 发起一个请求 | Record<string,any> | 可选 |
+
+mergedParams?: MergedParamsConfig;
+  vars?: Record<string, any>;
+  overrideActions?: Partial<ActionFns>;
 
 ### 核心接口规范
 
@@ -122,7 +137,7 @@ json
 | 参数 | 说明 | 类型 |
 | --- | --- | --- |
 | editableProTableProps | 给pro-components EditableProTable 组件的props，只支持其中可序列化的部分。 Pro-Component 文档: [EditableProTable props](https://procomponents.ant.design/components/editable-table#editableprotable) \| [Columns](https://procomponents.ant.design/components/table#columns-%E5%88%97%E5%AE%9A%E4%B9%89) | {editableProTableProps:EditableProTableProps,actions:\{queryList:srting,create:string,updateById:string,deleteById:string\}} |
-| valueTypeMap | 直接透传给 ProConfigProvider | 同 ProConfigProvider 的 valueTypeMap |
+| actions | 对应请求地址 | - |
 
 
 **响应 json 示例**：
