@@ -1,6 +1,6 @@
 {
   "name": "@bomon/schema-pro-component",
-  "version": "1.0.7",
+  "version": "1.0.9",
   "main": "src/index.tsx",
   "type": "module",
   "description": "",

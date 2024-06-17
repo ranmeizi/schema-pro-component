@@ -106,12 +106,12 @@ export function useTableAction(
       overrideActions.queryList
         ? overrideActions.queryList
         : (params) => {
-            if (!actions.queryList) {
-              return Promise.reject('不支持查询');
-            }
+          if (!actions.queryList) {
+            return Promise.reject('不支持查询');
+          }
 
-            return request(actions.queryList, 'GET', params);
-          },
+          return request(actions.queryList, 'GET', params);
+        },
     [request, overrideActions.queryList],
   );
 
@@ -121,19 +121,22 @@ export function useTableAction(
       overrideActions.create
         ? overrideActions.create
         : (params) => {
-            if (!actions.create) {
-              return Promise.reject('不支持创建');
-            }
+          if (!actions.create) {
+            return Promise.reject('不支持创建');
+          }
 
-            // 删除前端创建的id
-            if (params[String(rowKey)] === 'addnew') {
-              delete params[String(rowKey)];
-            }
+          // 删除前端创建的id
+          if (params[String(rowKey)] === 'addnew') {
+            delete params[String(rowKey)];
+          }
 
-            return request(actions.create, 'POST', params).then((res) => {
-              message.success('创建成功');
-            })
-          },
+          return request(actions.create, 'POST', params).then((res) => {
+            message.success('创建成功');
+          }).catch((e) => {
+            message.error(`创建失败${showMessage(e)}`)
+            throw e
+          })
+        },
     [request, overrideActions.create],
   );
 
@@ -143,14 +146,17 @@ export function useTableAction(
       overrideActions.updateById
         ? overrideActions.updateById
         : (params) => {
-            if (!actions.updateById) {
-              return Promise.reject('不支持更新');
-            }
+          if (!actions.updateById) {
+            return Promise.reject('不支持更新');
+          }
 
-            return request(actions.updateById, 'POST', params).then((res) => {
-              message.success('更新成功');
-            })
-          },
+          return request(actions.updateById, 'POST', params).then((res) => {
+            message.success('更新成功');
+          }).catch((e) => {
+            message.error(`更新失败${showMessage(e)}`)
+            throw e
+          })
+        },
     [request, overrideActions.updateById],
   );
 
@@ -160,14 +166,17 @@ export function useTableAction(
       overrideActions.deleteById
         ? overrideActions.deleteById
         : (params: any) => {
-            if (!actions.deleteById) {
-              return Promise.reject('不支持删除');
-            }
+          if (!actions.deleteById) {
+            return Promise.reject('不支持删除');
+          }
 
-            return request(actions.deleteById, 'POST', params).then((res) => {
-              message.success('删除成功');
-            })
-          },
+          return request(actions.deleteById, 'POST', params).then((res) => {
+            message.success('删除成功');
+          }).catch((e) => {
+            message.error(`删除失败${showMessage(e)}`)
+            throw e
+          })
+        },
     [request, overrideActions.deleteById],
   );
 
@@ -177,4 +186,9 @@ export function useTableAction(
     updateById,
     deleteById,
   };
+}
+
+/** action 反馈message */
+function showMessage(e:any){
+  return e?.message ? ':' + e.message : ''
 }
