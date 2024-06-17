@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Spin } from 'antd';
 import { SchemaComponentContext } from '../components/Provider';
+import { HOC_Inject } from '@/types';
 
 /** 获取 props 的 url */
 export type LoadingConfig = {

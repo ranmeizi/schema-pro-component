@@ -6,6 +6,7 @@ import { SchemaComponentContext } from '../components/Provider';
 import type { Request } from '../components/Provider';
 import { message } from 'antd';
 import { useAgent } from './useAgent';
+import { FormInstance } from 'antd/lib';
 
 type UseRequestOptions = {
   commonParams?: Record<string, any>;
@@ -80,9 +81,9 @@ export type ActionFns = {
     success: boolean;
     total: number;
   }>;
-  create: (params: any, record: any) => Promise<any>;
-  updateById: (params: any, record: any) => Promise<any>;
-  deleteById: (params: any, record: any) => Promise<any>;
+  create: (params: any, record: any, form: FormInstance) => Promise<any>;
+  updateById: (params: any, record: any, form: FormInstance) => Promise<any>;
+  deleteById: (params: any, record: any, form: FormInstance) => Promise<any>;
 };
 
 // 覆盖用
@@ -189,6 +190,6 @@ export function useTableAction(
 }
 
 /** action 反馈message */
-function showMessage(e:any){
+function showMessage(e: any) {
   return e?.message ? ':' + e.message : ''
 }

@@ -1,6 +1,7 @@
 import { useFieldRequest } from '../../../hooks/useFieldRequest';
 import type { SelectProps } from 'antd';
 import React, { useEffect } from 'react';
+import { HOC_Expand } from '@/types';
 
 type ParamsProps = {
   x_params?: Record<string, any>; // 因为 columns.params 会触发 request 请求，这里使用一个自定义的 x_params 只会触发 withParamsOptions 的更新
