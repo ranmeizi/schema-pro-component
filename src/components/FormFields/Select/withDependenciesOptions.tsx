@@ -1,4 +1,4 @@
-import { useFieldRequest } from '../../../utils/DefaultValueMaps';
+import { useFieldRequest } from '../../../hooks/useFieldRequest';
 import type { SelectProps } from 'antd';
 import React, { useEffect } from 'react';
 
@@ -15,7 +15,6 @@ export const withDependenciesOptions: HOC_Expand<ParamsProps> = (C) => (props) =
     request,
     params: props.x_params,
     onLoaded(_options: any) {
-      console.log('onloaded', _options, props.value);
       if (props.value !== undefined && !_options.some(({ value }: any) => value == props.value)) {
         // @ts-ignore
         props.onChange(undefined);

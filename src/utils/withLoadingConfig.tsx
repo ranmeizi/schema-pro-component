@@ -15,12 +15,13 @@ const withLoadingConfig: <T>() => HOC_Inject<T> = () => (Component) => (props: a
     init();
   }, []);
 
+
   async function init() {
     setData(undefined);
     setData(await request(props.url, 'GET'));
   }
 
-  return data ? <Component {...data} {...props} /> : <Spin spinning />;
+  return data ? <Component ref={props.forwardRef} {...data} {...props} /> : <Spin spinning />;
 };
 
 export default withLoadingConfig;
