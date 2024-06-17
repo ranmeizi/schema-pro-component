@@ -47,8 +47,6 @@ const Provider = ({ valueTypeMap = {}, children, request }: PropsWithChildren<De
     };
   }, [valueTypeMap]);
 
-  console.log('bibiprovider', maps);
-
   const intl = useIntl();
 
   return (

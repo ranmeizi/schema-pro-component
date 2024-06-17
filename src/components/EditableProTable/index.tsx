@@ -10,6 +10,7 @@ import type { MergedParamsConfig, ActionFns } from '../../hooks/useRequestAgent'
 import useRequestAgent, { useMergedParams, useTableAction } from '../../hooks/useRequestAgent';
 import { useAgent } from '../../hooks/useAgent';
 import { useCustomDependenciesColumns } from '../../utils/custom_dependencies';
+import { TableProvider } from '../TableProvider';
 
 export type RemoteSchemaEditableProTableConfig = {
   editableProTableProps: EditableProTableProps<any, any>;
@@ -128,37 +129,39 @@ function SchemaEditableProTable(props: SchemaEditableProTableProps, ref: any) {
   const editableProTableProps = props.editableProTableProps || {};
 
   return (
-    <EditableProTable
-      {...editableProTableProps}
-      tableClassName="schema-editable-protable"
-      columns={fix_columns as any}
-      value={value || []}
-      onChange={setValue as any}
-      editable={{
-        type: 'single',
-        async onSave(key, record) {
-          // 更新数据
-          if (String(record[rowKey]).startsWith(PREFIX_ROWKEY)) {
-            delete record[rowKey];
-            await actions.create(record, record);
-          } else {
-            await actions.updateById(record, record);
-          }
+    <TableProvider>
+      <EditableProTable
+        {...editableProTableProps}
+        tableClassName="schema-editable-protable"
+        columns={fix_columns as any}
+        value={value || []}
+        onChange={setValue as any}
+        editable={{
+          type: 'single',
+          async onSave(key, record) {
+            // 更新数据
+            if (String(record[rowKey]).startsWith(PREFIX_ROWKEY)) {
+              delete record[rowKey];
+              await actions.create(record, record);
+            } else {
+              await actions.updateById(record, record);
+            }
 
-          refresh();
-        },
-        actionRender: (row, config, defaultDom) => [defaultDom.save, defaultDom.cancel],
-      }}
-      recordCreatorProps={
-        props.actions.create
-          ? {
-            // 每次新增的时候需要Key
-            record: () => ({ [rowKey]: PREFIX_ROWKEY + Date.now() }),
-            creatorButtonText: '新建',
-          }
-          : false
-      }
-    />
+            refresh();
+          },
+          actionRender: (row, config, defaultDom) => [defaultDom.save, defaultDom.cancel],
+        }}
+        recordCreatorProps={
+          props.actions.create
+            ? {
+              // 每次新增的时候需要Key
+              record: () => ({ [rowKey]: PREFIX_ROWKEY + Date.now() }),
+              creatorButtonText: '新建',
+            }
+            : false
+        }
+      />
+    </TableProvider>
   );
 }
 
