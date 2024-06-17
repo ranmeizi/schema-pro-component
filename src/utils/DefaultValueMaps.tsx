@@ -11,6 +11,11 @@ export function useFieldRequest({ value, request, params, valueEnum, onLoaded }:
   const [options, setOptions] = useState([]);
 
   useEffect(() => {
+    // 没有 valueEnum 时，去请求 options
+    !valueEnum && getOptions()
+  }, [params]);
+
+  const getOptions = () => {
     request(params)
       .then((res: any) => {
         if (res === undefined) {
@@ -23,7 +28,7 @@ export function useFieldRequest({ value, request, params, valueEnum, onLoaded }:
       .catch((e) => {
         setOptions([]);
       });
-  }, [params]);
+  }
 
   const valueMap = useMemo(() => {
     // valueEnum 优先级更高
