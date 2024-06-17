@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
-import { EditableProTable } from '@ant-design/pro-table';
+import { EditableProTable, ProColumnType } from '@ant-design/pro-table';
 import { FormInstance, Popconfirm } from 'antd';
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import type { LoadingConfig } from '../../utils/withLoadingConfig';
@@ -12,6 +12,7 @@ import { useAgent } from '../../hooks/useAgent';
 import { useCustomDependenciesColumns } from '../../utils/custom_dependencies';
 import { TableProvider } from '../TableProvider';
 import { ProForm } from '@ant-design/pro-components';
+import useRefState from '../../hooks/useRefState';
 
 export type RemoteSchemaEditableProTableConfig = {
   editableProTableProps: EditableProTableProps<any, any>;
@@ -38,6 +39,7 @@ type SchemaEditableProTableProps = {
 export type SchemaEditableProTableRefType = {
   /** 获取表格数据 */
   getDataSource(): any[]
+  getColumns: () => ProColumnType<any>[]
   form: FormInstance
 }
 
@@ -49,13 +51,14 @@ function SchemaEditableProTable(props: SchemaEditableProTableProps, ref: any) {
   // 请求函数
   const request = useRequestAgent({ commonParams });
 
-  const [columns, setColumns] = useState<any[]>([]);
+  const [columns, setColumns, refColumns] = useRefState<any[]>([]);
   const [value, setValue] = useState<any[]>([]);
   const [form] = ProForm.useForm()
 
   useImperativeHandle<any, SchemaEditableProTableRefType>(ref, () => {
     return {
       getDataSource: () => value,
+      getColumns: () => refColumns.current || [],
       form: form
     }
   })
