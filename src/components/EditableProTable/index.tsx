@@ -13,7 +13,7 @@ import { useCustomDependenciesColumns } from '../../utils/custom_dependencies';
 import { TableProvider } from '../TableProvider';
 import { ProForm } from '@ant-design/pro-components';
 import useRefState from '../../hooks/useRefState';
-import useFullTableScroll from 'hooks/useFullTableScroll';
+import useFullTableScroll from '../../hooks/useFullTableScroll';
 import './style.less'
 
 export type RemoteSchemaEditableProTableConfig = {
