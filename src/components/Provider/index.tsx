@@ -39,6 +39,10 @@ export type Dependencies = IRequest & IProProvider;
 
 export const SchemaComponentContext = createContext<Dependencies>(initValue);
 
+
+/**
+ * 自己 / antd provider 
+ */
 const Provider = ({ valueTypeMap = {}, children, request }: PropsWithChildren<Dependencies>) => {
   const maps = useMemo(() => {
     return {

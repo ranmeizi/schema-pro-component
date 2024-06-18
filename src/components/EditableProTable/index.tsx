@@ -43,6 +43,7 @@ export type SchemaEditableProTableRefType = {
   form: FormInstance
 }
 
+// 新增 rowkey 前缀 
 const PREFIX_ROWKEY = '__front_addnew__';
 
 function SchemaEditableProTable(props: SchemaEditableProTableProps, ref: any) {
@@ -55,6 +56,7 @@ function SchemaEditableProTable(props: SchemaEditableProTableProps, ref: any) {
   const [value, setValue] = useState<any[]>([]);
   const [form] = ProForm.useForm()
 
+  // 处理 ref
   useImperativeHandle<any, SchemaEditableProTableRefType>(ref, () => {
     return {
       getDataSource: () => value,

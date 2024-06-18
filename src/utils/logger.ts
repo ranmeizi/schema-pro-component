@@ -1,5 +1,6 @@
 const prefix = 'SchemaComponent:';
 
+/** 打印 */
 export default {
   log(str: string) {
     console.log(`${prefix} : ${str}`);

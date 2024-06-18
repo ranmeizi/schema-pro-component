@@ -97,7 +97,7 @@ TODO: 使用 request 自己处理不同的通用响应的json类型。(但现在
 
 #### CommonRes
 
-
+CommonRes 随意，你可以在 request 时自己处理
 
 ```ts
 type CommonRes<T> = {
@@ -116,7 +116,7 @@ json
 }
 ```
 
-**⬇下面讨论的所有类型说明，都是CommonRes.result**
+**⬇下面讨论的所有类型说明，都是正确流程的CommonRes.result**
 
 #### 用于 RemoteSchemaEditableProTable 的 schema json
 

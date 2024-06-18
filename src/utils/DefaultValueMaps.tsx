@@ -10,6 +10,9 @@ function ValueMapRequest(props: any) {
   return text;
 }
 
+/**
+ * 内置 valueMaps
+ */
 export const DEFAULT_VALUE_MAPS: Record<string, ProRenderFieldPropsType> = {
   SC_DependenciesOptionsSelect: {
     // @ts-ignore

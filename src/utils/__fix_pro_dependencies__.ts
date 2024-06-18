@@ -48,7 +48,7 @@ export function _f_i_x_useDependenciesColumns(columns: any[]) {
   }, [columns]);
 
   const fix_columns = useMemo(() => {
-    const paramsMap = {};
+    const paramsMap: Record<string, any> = {};
 
     for (const [provider, consumers] of Object.entries(map.current)) {
       for (const consumer of consumers) {
@@ -89,7 +89,7 @@ export function _f_i_x_useDependenciesColumns(columns: any[]) {
 }
 
 function getMap(columns: ProColumnType[]): Record<string, string[]> {
-  const map = {};
+  const map: Record<string, string[]> = {};
 
   for (const col of columns) {
     if (col.dependencies && col.dependencies.length > 0) {
@@ -97,7 +97,7 @@ function getMap(columns: ProColumnType[]): Record<string, string[]> {
         if (!map[dep]) {
           map[dep] = [];
         }
-        map[dep].push(col.dataIndex);
+        map[dep].push(String(col.dataIndex));
       }
     }
   }

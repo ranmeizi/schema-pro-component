@@ -8,6 +8,9 @@ export type LoadingConfig = {
   url?: string;
 };
 
+/**
+ * 组件用 url 请求 config props
+ */
 const withLoadingConfig: <T>() => HOC_Inject<T> = () => (Component) => (props: any) => {
   const [data, setData] = useState<any>(undefined);
   const { request } = useContext(SchemaComponentContext);

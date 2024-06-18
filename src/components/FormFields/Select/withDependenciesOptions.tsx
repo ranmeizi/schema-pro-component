@@ -8,6 +8,11 @@ type ParamsProps = {
   request?: any;
 } & SelectProps;
 
+
+/**
+ * 包一层 使用 useFieldRequest 的组件获取 options
+ * (自己实现的 x_params 触发的 request ,而不是 params)
+ */
 export const withDependenciesOptions: HOC_Expand<ParamsProps> = (C) => (props) => {
   const { request, ...rest } = props;
 
