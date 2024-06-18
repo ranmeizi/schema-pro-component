@@ -26,7 +26,7 @@ export type RemoteSchemaEditableProTableConfig = {
 
 type SchemaEditableProTableProps = {
   /** 透传的 ref。 */
-  forwardRef: any;
+  forwardRef?: any;
   /** 随请求携带的 vars key。 */
   mergedParams?: MergedParamsConfig;
   /** 外部变量，当vars变化时，重新获取数据。*/
@@ -46,7 +46,7 @@ export type SchemaEditableProTableRefType = {
 // 新增 rowkey 前缀 
 const PREFIX_ROWKEY = '__front_addnew__';
 
-function SchemaEditableProTable(props: SchemaEditableProTableProps, ref: any) {
+const SchemaEditableProTable = forwardRef(function (props: SchemaEditableProTableProps, ref: any) {
   // 提取需要合并的公共参数
   const commonParams = useMergedParams({ vars: props.vars || {} }, props.mergedParams);
   // 请求函数
@@ -178,9 +178,9 @@ function SchemaEditableProTable(props: SchemaEditableProTableProps, ref: any) {
       />
     </TableProvider>
   );
-}
+})
 
 const RemoteSchemaEditableProTable =
-  withLoadingConfig<RemoteSchemaEditableProTableConfig>()(forwardRef(SchemaEditableProTable));
+  withLoadingConfig<RemoteSchemaEditableProTableConfig>()(SchemaEditableProTable);
 
 export { RemoteSchemaEditableProTable, SchemaEditableProTable };
