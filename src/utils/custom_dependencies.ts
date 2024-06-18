@@ -8,10 +8,16 @@ import type { ProColumnType } from '@ant-design/pro-table';
 import { useMemo, useRef } from 'react';
 import useRefState from '../hooks/useRefState';
 
+/**
+ * 使用 react 数据流外部存储变化的 params 以更新 columns，
+ * 
+ * 使用自定义 filedProps.x_params 让自定义组件重新发起 request
+ */
 export function useCustomDependenciesColumns(columns: any[]) {
   const map = useRef<Record<string, string[]>>({});
   const [values, setValues, rValues] = useRefState<Record<string, any>>({});
 
+  // 添加 onChange 监听
   const baseFixColumns: ProColumnType[] = useMemo(() => {
     map.current = getMap(columns);
 
@@ -31,8 +37,9 @@ export function useCustomDependenciesColumns(columns: any[]) {
     });
   }, [columns]);
 
+  // 设置 x_params
   const fix_columns = useMemo(() => {
-    const paramsMap = {};
+    const paramsMap: Record<string, any> = {};
 
     for (const [provider, consumers] of Object.entries(map.current)) {
       for (const consumer of consumers) {
@@ -76,7 +83,7 @@ export function useCustomDependenciesColumns(columns: any[]) {
 }
 
 function getMap(columns: ProColumnType[]): Record<string, string[]> {
-  const map = {};
+  const map: Record<string, string[]> = {};
 
   for (const col of columns) {
     if (col.dependencies && col.dependencies.length > 0) {
@@ -84,7 +91,7 @@ function getMap(columns: ProColumnType[]): Record<string, string[]> {
         if (!map[dep]) {
           map[dep] = [];
         }
-        map[dep].push(col.dataIndex);
+        map[dep].push(String(col.dataIndex));
       }
     }
   }

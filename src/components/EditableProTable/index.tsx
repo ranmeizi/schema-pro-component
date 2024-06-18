@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-unused-expressions */
-import { EditableProTable } from '@ant-design/pro-table';
-import { Popconfirm } from 'antd';
+import { EditableProTable, ProColumnType } from '@ant-design/pro-table';
+import { FormInstance, Popconfirm } from 'antd';
 import React, { forwardRef, useEffect, useImperativeHandle, useState } from 'react';
 import type { LoadingConfig } from '../../utils/withLoadingConfig';
 import withLoadingConfig from '../../utils/withLoadingConfig';
@@ -11,6 +11,8 @@ import useRequestAgent, { useMergedParams, useTableAction } from '../../hooks/us
 import { useAgent } from '../../hooks/useAgent';
 import { useCustomDependenciesColumns } from '../../utils/custom_dependencies';
 import { TableProvider } from '../TableProvider';
+import { ProForm } from '@ant-design/pro-components';
+import useRefState from '../../hooks/useRefState';
 
 export type RemoteSchemaEditableProTableConfig = {
   editableProTableProps: EditableProTableProps<any, any>;
@@ -23,8 +25,13 @@ export type RemoteSchemaEditableProTableConfig = {
 };
 
 type SchemaEditableProTableProps = {
+  /** 透传的 ref。 */
+  forwardRef?: any;
+  /** 随请求携带的 vars key。 */
   mergedParams?: MergedParamsConfig;
+  /** 外部变量，当vars变化时，重新获取数据。*/
   vars?: Record<string, any>;
+  /** 重写内部请求的行为。 */
   overrideActions?: Partial<ActionFns>;
 } & LoadingConfig &
   RemoteSchemaEditableProTableConfig;
@@ -32,22 +39,29 @@ type SchemaEditableProTableProps = {
 export type SchemaEditableProTableRefType = {
   /** 获取表格数据 */
   getDataSource(): any[]
+  getColumns: () => ProColumnType<any>[]
+  form: FormInstance
 }
 
+// 新增 rowkey 前缀 
 const PREFIX_ROWKEY = '__front_addnew__';
 
-function SchemaEditableProTable(props: SchemaEditableProTableProps, ref: any) {
+const SchemaEditableProTable = forwardRef(function (props: SchemaEditableProTableProps, ref: any) {
   // 提取需要合并的公共参数
   const commonParams = useMergedParams({ vars: props.vars || {} }, props.mergedParams);
   // 请求函数
   const request = useRequestAgent({ commonParams });
 
-  const [columns, setColumns] = useState<any[]>([]);
+  const [columns, setColumns, refColumns] = useRefState<any[]>([]);
   const [value, setValue] = useState<any[]>([]);
+  const [form] = ProForm.useForm()
 
+  // 处理 ref
   useImperativeHandle<any, SchemaEditableProTableRefType>(ref, () => {
     return {
-      getDataSource: () => value
+      getDataSource: () => value,
+      getColumns: () => refColumns.current || [],
+      form: form
     }
   })
 
@@ -111,7 +125,7 @@ function SchemaEditableProTable(props: SchemaEditableProTableProps, ref: any) {
               <Popconfirm
                 title="确认要删除吗？"
                 onConfirm={() => {
-                  actions.deleteById({ [rowKey]: record[rowKey] }, record).then(refresh);
+                  actions.deleteById({ [rowKey]: record[rowKey] }, record, form).then(refresh);
                 }}
               >
                 <a key="delete">删除</a>
@@ -138,13 +152,14 @@ function SchemaEditableProTable(props: SchemaEditableProTableProps, ref: any) {
         onChange={setValue as any}
         editable={{
           type: 'single',
+          form,
           async onSave(key, record) {
             // 更新数据
             if (String(record[rowKey]).startsWith(PREFIX_ROWKEY)) {
               delete record[rowKey];
-              await actions.create(record, record);
+              await actions.create(record, record, form);
             } else {
-              await actions.updateById(record, record);
+              await actions.updateById(record, record, form);
             }
 
             refresh();
@@ -163,9 +178,9 @@ function SchemaEditableProTable(props: SchemaEditableProTableProps, ref: any) {
       />
     </TableProvider>
   );
-}
+})
 
 const RemoteSchemaEditableProTable =
-  withLoadingConfig<RemoteSchemaEditableProTableConfig>()(forwardRef(SchemaEditableProTable));
+  withLoadingConfig<RemoteSchemaEditableProTableConfig>()(SchemaEditableProTable);
 
 export { RemoteSchemaEditableProTable, SchemaEditableProTable };

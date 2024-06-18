@@ -6,18 +6,11 @@ import { SchemaComponentContext } from '../components/Provider';
 import type { Request } from '../components/Provider';
 import { message } from 'antd';
 import { useAgent } from './useAgent';
+import { FormInstance } from 'antd/lib';
 
 type UseRequestOptions = {
   commonParams?: Record<string, any>;
 };
-
-export function createInvoker(initialValue: any): any {
-  const invoker = function () {
-    return invoker.value(...arguments);
-  };
-  invoker.value = initialValue;
-  return invoker;
-}
 
 /**
  * 1. 获取外部 request 函数
@@ -51,7 +44,7 @@ export type MergedParamsConfig = {
 // 从 var 中提取请求通用参数
 export function useMergedParams(ctx: MergedParamsCtx, config: MergedParamsConfig = {}) {
   const varParams = useMemo(() => {
-    const params = {};
+    const params: Record<string, any> = {};
     const vars = config.vars || [];
 
     for (const k of vars) {
@@ -75,19 +68,24 @@ export function useMergedParams(ctx: MergedParamsCtx, config: MergedParamsConfig
  */
 
 export type ActionFns = {
+  /** 请求列表 */
   queryList: (params: any) => Promise<{
     data: any;
     success: boolean;
     total: number;
   }>;
-  create: (params: any, record: any) => Promise<any>;
-  updateById: (params: any, record: any) => Promise<any>;
-  deleteById: (params: any, record: any) => Promise<any>;
+  /** 创建一行数据 */
+  create: (params: any, record: any, form: FormInstance) => Promise<any>;
+  /** 使用 rowKey 修改一行数据 */
+  updateById: (params: any, record: any, form: FormInstance) => Promise<any>;
+  /** 使用 rowKey 删除一行数据 */
+  deleteById: (params: any, record: any, form: FormInstance) => Promise<any>;
 };
 
 // 覆盖用
 export type OverrideActionFns = Partial<ActionFns>;
 
+// table 用的 action
 export function useTableAction(
   {
     request,
@@ -189,6 +187,6 @@ export function useTableAction(
 }
 
 /** action 反馈message */
-function showMessage(e:any){
+function showMessage(e: any) {
   return e?.message ? ':' + e.message : ''
 }
