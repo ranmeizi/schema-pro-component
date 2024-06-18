@@ -100,6 +100,11 @@ const SchemaEditableProTable = forwardRef(function (props: SchemaEditableProTabl
       // 重写 request string => function
       overrideRequest(props.editableProTableProps.columns, request);
 
+      // strict mode
+      if(props.editableProTableProps.columns.some(item=>item.valueType==='option')){
+        return 
+      }
+
       // 加上操作列
       props.editableProTableProps.columns.push({
         title: '操作',
