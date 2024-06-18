@@ -13,6 +13,8 @@ import { useCustomDependenciesColumns } from '../../utils/custom_dependencies';
 import { TableProvider } from '../TableProvider';
 import { ProForm } from '@ant-design/pro-components';
 import useRefState from '../../hooks/useRefState';
+import useFullTableScroll from '../../hooks/useFullTableScroll';
+import './style.less'
 
 export type RemoteSchemaEditableProTableConfig = {
   editableProTableProps: EditableProTableProps<any, any>;
@@ -101,8 +103,8 @@ const SchemaEditableProTable = forwardRef(function (props: SchemaEditableProTabl
       overrideRequest(props.editableProTableProps.columns, request);
 
       // strict mode
-      if(props.editableProTableProps.columns.some(item=>item.valueType==='option')){
-        return 
+      if (props.editableProTableProps.columns.some(item => item.valueType === 'option')) {
+        return
       }
 
       // 加上操作列
@@ -145,16 +147,26 @@ const SchemaEditableProTable = forwardRef(function (props: SchemaEditableProTabl
     setColumns(props.editableProTableProps.columns || []);
   }
 
+  // 点击新增滚动
+  function onCreate() {
+    const el = document.querySelector(".schema-editable-protable .ant-table-body");
+    el?.scrollTo({ top: el.scrollHeight });
+    setTimeout(() => {
+      el?.scrollBy({ top: 90 });
+    }, 150);
+  }
+
   const editableProTableProps = props.editableProTableProps || {};
 
   return (
     <TableProvider>
       <EditableProTable
         {...editableProTableProps}
-        tableClassName="schema-editable-protable"
+        className="schema-editable-protable"
         columns={fix_columns as any}
         value={value || []}
         onChange={setValue as any}
+        scroll={useFullTableScroll('.schema-editable-protable>.ant-pro-card')}
         editable={{
           type: 'single',
           form,
@@ -174,6 +186,7 @@ const SchemaEditableProTable = forwardRef(function (props: SchemaEditableProTabl
         recordCreatorProps={
           props.actions.create
             ? {
+              onClick: onCreate,
               // 每次新增的时候需要Key
               record: () => ({ [rowKey]: PREFIX_ROWKEY + Date.now() }),
               creatorButtonText: '新建',
